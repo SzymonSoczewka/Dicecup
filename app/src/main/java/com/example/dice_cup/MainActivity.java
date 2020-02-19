@@ -1,6 +1,5 @@
 package com.example.dice_cup;
 
-import android.app.ListActivity;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -10,7 +9,6 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -18,6 +16,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -29,17 +28,19 @@ public class MainActivity extends AppCompatActivity {
     private ListView historyListView;
     private Context c;
     LinearLayout.LayoutParams params;
-    private int currentNum = 1;
+    private int currentNum;
     private int sum;
     ImageView dice;
-    private Random r = new Random();
-    private ArrayList<String> historyRecord = new ArrayList<>();
-    private ArrayList<Integer> historyRecord2 = new ArrayList<>();
+    private Random r;
+    private ArrayList<Integer> dices = new ArrayList<>();
+    private ArrayList<Roll> rolls = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        currentNum = 1;
+        r = new Random();
         c = getWindow().getContext();
         init();
         setButtons();
@@ -65,7 +66,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 dicesField.removeAllViews();
                 sum = 0;
-                historyRecord2.clear();
+                dices.clear();
                 generateDices(currentNum);
             }
         });
@@ -75,30 +76,31 @@ public class MainActivity extends AppCompatActivity {
             int randomNum = r.nextInt(6) + 1;
             sum += randomNum;
             dice = new ImageView(c);
+            int id;
             switch (randomNum) {
                 case 1:
-                    dice.setImageResource(R.drawable.dice_one);
-                    historyRecord2.add(R.drawable.dice_one);
+                    id = R.drawable.dice_one;
+                    setImage(id);
                     break;
                 case 2:
-                    dice.setImageResource(R.drawable.dice_two);
-                    historyRecord2.add(R.drawable.dice_two);
+                    id = R.drawable.dice_two;
+                    setImage(id);
                     break;
                 case 3:
-                    dice.setImageResource(R.drawable.dice_three);
-                    historyRecord2.add(R.drawable.dice_three);
+                    id = R.drawable.dice_three;
+                    setImage(id);
                     break;
                 case 4:
-                    dice.setImageResource(R.drawable.dice_four);
-                    historyRecord2.add(R.drawable.dice_four);
+                    id = R.drawable.dice_four;
+                    setImage(id);
                     break;
                 case 5:
-                    dice.setImageResource(R.drawable.dice_five);
-                    historyRecord2.add(R.drawable.dice_five);
+                    id = R.drawable.dice_five;
+                    setImage(id);
                     break;
                 case 6:
-                    dice.setImageResource(R.drawable.dice_six);
-                    historyRecord2.add(R.drawable.dice_six);
+                    id = R.drawable.dice_six;
+                    setImage(id);
                     break;
             }
             params = new LinearLayout.LayoutParams(150,150);
@@ -107,13 +109,22 @@ public class MainActivity extends AppCompatActivity {
             dicesField.addView(dice);
         }
         lastScore.setText(String.valueOf(sum));
-        setAdapter(historyRecord);
+        ArrayList<Integer> copyDices = new ArrayList<>(dices.size());
+        copyDices.addAll(dices);
+        rolls.add(new Roll(sum,copyDices));
+        setAdapter(rolls);
     }
 
-    private void setAdapter(ArrayList<String> historyRecord) {
-        historyRecord.add(historyRecord.size()+1 +". SUM = " + sum);
-        RollAdapter arrayAdapter = new RollAdapter(this,historyRecord);
+    private void setImage(int id) {
+        dice.setImageResource(id);
+        dices.add(id);
+    }
+
+    private void setAdapter(ArrayList<Roll> rolls) {
+        RollAdapter arrayAdapter = new RollAdapter(this, rolls);
+        arrayAdapter.notifyDataSetChanged();
         historyListView.setAdapter(arrayAdapter);
+        historyListView.setSelection(arrayAdapter.getCount() -1);
     }
 
     private void init() {
@@ -127,11 +138,11 @@ public class MainActivity extends AppCompatActivity {
         }
 
 
-    class RollAdapter extends ArrayAdapter<String>{
+    class RollAdapter extends ArrayAdapter<Roll>{
 
-        private ArrayList<String> rolls = historyRecord;
+        private ArrayList<Roll> rolls;
 
-        public RollAdapter(@NonNull Context context, @NonNull ArrayList<String> rolls) {
+        RollAdapter(@NonNull Context context, @NonNull ArrayList<Roll> rolls) {
             super(context, 0, rolls);
             this.rolls = rolls;
         }
@@ -142,20 +153,19 @@ public class MainActivity extends AppCompatActivity {
 
             if(view == null)
             {
-                //Obtain inflater
                 LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                 view = inflater.inflate(R.layout.single_record,null);
             }
 
-            String score = historyRecord.get(position);
-
+            Roll roll = rolls.get(position);
             TextView txtScore = view.findViewById(R.id.textView);
-            txtScore.setText(score);
+            txtScore.setText(MessageFormat.format("Score: {0}", roll.getScore()));
 
 
             LinearLayout dicesLayout = view.findViewById(R.id.dicesContainter);
+            List<Integer> dices = roll.getDices();
             dicesLayout.removeAllViews();
-            for (Integer imageID : historyRecord2) {
+            for (Integer imageID : dices) {
                 ImageView dice = new ImageView(c);
                 dice.setImageResource(imageID);
                 LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(80, LinearLayout.LayoutParams.MATCH_PARENT);
