@@ -59,35 +59,31 @@
         android:orientation="horizontal">
 
         <TextView
-            android:layout_width="230dp"
+            android:layout_width="216dp"
             android:layout_height="wrap_content"
             android:gravity="center|left"
             android:text="@string/resultTitle"
             android:textColor="@android:color/white"
             android:textSize="40sp" />
 
-        <LinearLayout
+        <TextView
+            android:id="@+id/lastScore"
+            android:layout_width="100dp"
+            android:layout_height="match_parent"
+            android:gravity="center|left"
+            android:text="@string/resultVal"
+            android:textColor="@android:color/white"
+            android:textSize="40sp" />
+
+        <Button
+            android:id="@+id/clean"
+            style="@style/Widget.AppCompat.Button.Borderless"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="right"
-            android:paddingRight="10dp">
-
-            <TextView
-                android:id="@+id/txtResult"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@android:color/white"
-                android:textSize="40sp" />
-
-            <TextView
-                android:id="@+id/lastScore"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="center|left"
-                android:text="@string/resultVal"
-                android:textColor="@android:color/white"
-                android:textSize="40sp" />
-        </LinearLayout>
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="X"
+            android:textColor="#FFFFFF"
+            android:textSize="20sp" />
 
     </LinearLayout>
 

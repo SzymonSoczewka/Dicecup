@@ -22,7 +22,7 @@ import java.util.List;
 import java.util.Random;
 
 public class MainActivity extends AppCompatActivity {
-    private Button add,subtract,roll;
+    private Button add,subtract,roll,clean;
     private TextView dicesNum,lastScore;
     private LinearLayout dicesField;
     private ListView historyListView;
@@ -32,6 +32,7 @@ public class MainActivity extends AppCompatActivity {
     private int sum;
     ImageView dice;
     private Random r;
+    RollAdapter arrayAdapter;
     private ArrayList<Integer> dices = new ArrayList<>();
     private ArrayList<Roll> rolls = new ArrayList<>();
 
@@ -70,7 +71,22 @@ public class MainActivity extends AppCompatActivity {
                 generateDices(currentNum);
             }
         });
+        clean.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                clean();
+            }
+        });
     }
+
+    private void clean() {
+        this.rolls.clear();
+        this.dices.clear();
+        this.lastScore.setText("0");
+        if(arrayAdapter !=null)
+        arrayAdapter.notifyDataSetChanged();
+    }
+
     private void generateDices(int currentNum) {
         for (int i = 0; i < currentNum; i++) {
             int randomNum = r.nextInt(6) + 1;
@@ -121,7 +137,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setAdapter(ArrayList<Roll> rolls) {
-        RollAdapter arrayAdapter = new RollAdapter(this, rolls);
+        arrayAdapter = new RollAdapter(this, rolls);
         arrayAdapter.notifyDataSetChanged();
         historyListView.setAdapter(arrayAdapter);
         historyListView.setSelection(arrayAdapter.getCount() -1);
@@ -135,6 +151,7 @@ public class MainActivity extends AppCompatActivity {
         dicesField = findViewById(R.id.dicesField);
         historyListView = findViewById(R.id.listView);
         lastScore = findViewById(R.id.lastScore);
+        clean = findViewById(R.id.clean);
         }
 
 
