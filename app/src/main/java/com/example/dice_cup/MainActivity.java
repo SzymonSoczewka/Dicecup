@@ -5,12 +5,14 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -75,6 +77,24 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 clean();
+            }
+        });
+        historyListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Roll roll = rolls.get(position);
+                int score = roll.getScore();
+                int dicesAmount = roll.getDices().size();
+                String text;
+                if(score / dicesAmount == 6)
+                    text = "You are a god";
+                else if(roll.getScore() / roll.getDices().size() > 3){
+                    text = "You rock!";
+                }
+                else
+                    text = "You weak boy";
+                Toast.makeText(c, text,
+                        Toast.LENGTH_SHORT).show();
             }
         });
     }
