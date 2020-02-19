@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">Dice-cup</string>
+    <string name="rollText">Roll</string>
+    <string name="title_activity_list1">ListActivity1</string>
+    <string name="resultTitle">Last score:</string>
+    <string name="resultVal">0</string>
+    <string name="dicesDefault">1</string>
+    <string name="sub">-</string>
+    <string name="add">+</string>
 </resources>
