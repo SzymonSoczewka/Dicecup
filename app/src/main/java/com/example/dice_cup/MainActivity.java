@@ -1,42 +1,39 @@
 package com.example.dice_cup;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
-import android.view.LayoutInflater;
+import android.os.PersistableBundle;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-import java.text.MessageFormat;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Random;
 
 public class MainActivity extends AppCompatActivity {
-    private Button add,subtract,roll,clean;
+    public static final int HISTORY_ACTIVITY = 2;
+    private Button add,subtract,roll;
     private TextView dicesNum,lastScore;
     private LinearLayout dicesField;
-    private ListView historyListView;
+    private ListView mainListView;
     private Context c;
+    private ImageView historyIcon;
     LinearLayout.LayoutParams params;
     private int currentNum;
     private int sum;
     ImageView dice;
     private Random r;
-    RollAdapter arrayAdapter;
     private ArrayList<Integer> dices = new ArrayList<>();
     private ArrayList<Roll> rolls = new ArrayList<>();
+    private RollAdapter arrayAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,7 +42,7 @@ public class MainActivity extends AppCompatActivity {
         currentNum = 1;
         r = new Random();
         c = getWindow().getContext();
-        init();
+        initViews();
         setButtons();
     }
 
@@ -73,38 +70,29 @@ public class MainActivity extends AppCompatActivity {
                 generateDices(currentNum);
             }
         });
-        clean.setOnClickListener(new View.OnClickListener() {
+        historyIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                clean();
-            }
-        });
-        historyListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Roll roll = rolls.get(position);
-                int score = roll.getScore();
-                int dicesAmount = roll.getDices().size();
-                String text;
-                if(score / dicesAmount == 6)
-                    text = "You are a god";
-                else if(roll.getScore() / roll.getDices().size() > 3){
-                    text = "You rock!";
-                }
-                else
-                    text = "You weak boy";
-                Toast.makeText(c, text,
-                        Toast.LENGTH_SHORT).show();
+                Intent i = new Intent(c,HistoryActivity.class);
+                i.putExtra("historyArrayList",rolls);
+                startActivityForResult(i,HISTORY_ACTIVITY);
             }
         });
     }
 
-    private void clean() {
-        this.rolls.clear();
-        this.dices.clear();
-        this.lastScore.setText("0");
-        if(arrayAdapter !=null)
-        arrayAdapter.notifyDataSetChanged();
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == HISTORY_ACTIVITY) {
+            if (resultCode == Activity.RESULT_OK) {
+                // TODO Extract the data returned from the child Activity.
+                this.rolls = (ArrayList<Roll>) data.getExtras().getSerializable("emptyArrayList");
+                lastScore.setText(String.valueOf(0));
+                if(rolls.isEmpty()){
+                    this.arrayAdapter.clear();
+                }
+            }
+        }
     }
 
     private void generateDices(int currentNum) {
@@ -112,7 +100,7 @@ public class MainActivity extends AppCompatActivity {
             int randomNum = r.nextInt(6) + 1;
             sum += randomNum;
             dice = new ImageView(c);
-            int id;
+            int id,size;
             switch (randomNum) {
                 case 1:
                     id = R.drawable.dice_one;
@@ -155,62 +143,20 @@ public class MainActivity extends AppCompatActivity {
         dice.setImageResource(id);
         dices.add(id);
     }
-
-    private void setAdapter(ArrayList<Roll> rolls) {
-        arrayAdapter = new RollAdapter(this, rolls);
-        arrayAdapter.notifyDataSetChanged();
-        historyListView.setAdapter(arrayAdapter);
-        historyListView.setSelection(arrayAdapter.getCount() -1);
-    }
-
-    private void init() {
+    private void initViews() {
         add = findViewById(R.id.addButt);
         subtract = findViewById(R.id.subtractButt);
         dicesNum = findViewById(R.id.dicesNum);
         roll = findViewById(R.id.roll);
         dicesField = findViewById(R.id.dicesField);
-        historyListView = findViewById(R.id.listView);
         lastScore = findViewById(R.id.lastScore);
-        clean = findViewById(R.id.clean);
+        historyIcon = findViewById(R.id.historyIcon);
+        mainListView = findViewById(R.id.mainListView);
         }
-
-
-    class RollAdapter extends ArrayAdapter<Roll>{
-
-        private ArrayList<Roll> rolls;
-
-        RollAdapter(@NonNull Context context, @NonNull ArrayList<Roll> rolls) {
-            super(context, 0, rolls);
-            this.rolls = rolls;
-        }
-
-        @NonNull
-        @Override
-        public View getView(int position, @Nullable View view, @NonNull ViewGroup parent) {
-
-            if(view == null)
-            {
-                LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                view = inflater.inflate(R.layout.single_record,null);
-            }
-
-            Roll roll = rolls.get(position);
-            TextView txtScore = view.findViewById(R.id.textView);
-            txtScore.setText(MessageFormat.format("Score: {0}", roll.getScore()));
-
-
-            LinearLayout dicesLayout = view.findViewById(R.id.dicesContainter);
-            List<Integer> dices = roll.getDices();
-            dicesLayout.removeAllViews();
-            for (Integer imageID : dices) {
-                ImageView dice = new ImageView(c);
-                dice.setImageResource(imageID);
-                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(80, LinearLayout.LayoutParams.MATCH_PARENT);
-                params.setMargins(5,5,5,5);
-                dice.setLayoutParams(params);
-                dicesLayout.addView(dice);
-            }
-            return view;
-        }
-        }
+    private void setAdapter(ArrayList<Roll> rolls) {
+        arrayAdapter = new RollAdapter(c, rolls);
+        arrayAdapter.notifyDataSetChanged();
+        mainListView.setAdapter(arrayAdapter);
+        mainListView.setSelection(arrayAdapter.getCount() -1);
     }
+}

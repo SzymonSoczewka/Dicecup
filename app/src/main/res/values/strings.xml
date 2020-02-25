@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Dice-cup</string>
+    <string name="app_name">Dice Cup</string>
     <string name="rollText">Roll</string>
     <string name="title_activity_list1">ListActivity1</string>
     <string name="resultTitle">Last score:</string>

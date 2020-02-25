@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -9,13 +10,14 @@
     <LinearLayout
         android:id="@+id/dicesField"
         android:layout_width="match_parent"
-        android:layout_height="57dp"
+        android:layout_height="170px"
         android:gravity="center"
-        android:orientation="horizontal" />
+        android:orientation="horizontal"
+        android:visibility="visible" />
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="100dp"
         android:gravity="center">
 
         <Button
@@ -54,7 +56,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="85dp"
         android:background="#F44336"
         android:orientation="horizontal">
 
@@ -75,21 +77,18 @@
             android:textColor="@android:color/white"
             android:textSize="40sp" />
 
-        <Button
-            android:id="@+id/clean"
-            style="@style/Widget.AppCompat.Button.Borderless"
-            android:layout_width="match_parent"
+        <ImageView
+            android:id="@+id/historyIcon"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="X"
-            android:textColor="#FFFFFF"
-            android:textSize="20sp" />
+            app:srcCompat="@drawable/ic_description_white_18dp" />
 
     </LinearLayout>
 
     <ListView
-        android:id="@+id/listView"
+        android:id="@+id/mainListView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent" />
 
 </LinearLayout>

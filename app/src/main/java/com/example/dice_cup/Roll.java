@@ -1,7 +1,8 @@
 package com.example.dice_cup;
+import java.io.Serializable;
 import java.util.ArrayList;
 
-class Roll {
+class Roll implements Serializable {
 
     private int score;
     private ArrayList<Integer> dices;
@@ -26,4 +27,5 @@ class Roll {
     ArrayList<Integer> getDices() {
         return dices;
     }
+
 }
