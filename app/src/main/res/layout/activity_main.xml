@@ -52,7 +52,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:text="@string/rollText" />
+        android:text="@string/rollText"
+        android:layout_marginBottom="27dp"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -89,6 +90,6 @@
     <ListView
         android:id="@+id/mainListView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="454dp" />
 
 </LinearLayout>
