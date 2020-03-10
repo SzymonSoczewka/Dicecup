@@ -12,8 +12,12 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import java.sql.Timestamp;
+import java.text.DateFormat;
 import java.text.MessageFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class RollAdapter extends ArrayAdapter<Roll> {
@@ -35,9 +39,12 @@ public class RollAdapter extends ArrayAdapter<Roll> {
             view = inflater.inflate(R.layout.single_record,null);
         }
 
+
+
+
         Roll roll = rolls.get(position);
         TextView txtScore = view.findViewById(R.id.textView);
-        txtScore.setText(MessageFormat.format((position+1)+".Score={0}", roll.getScore()));
+        txtScore.setText(MessageFormat.format(roll.getTimestamp(), roll.getScore()));
 
 
         LinearLayout dicesLayout = view.findViewById(R.id.dicesContainter);

@@ -1,41 +1,31 @@
 package com.example.dice_cup;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import java.text.MessageFormat;
+import androidx.appcompat.app.AppCompatActivity;
+
 import java.util.ArrayList;
-import java.util.List;
 
 public class HistoryActivity extends AppCompatActivity {
 
     RollAdapter arrayAdapter;
     Button clearButt,returnButt;
-    private Context c;
-    ListView historyListView;
+    private Context context;
+    ListView listView;
     ArrayList<Roll> rolls;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_history);
-        this.c = getWindow().getContext();
+        this.context = getWindow().getContext();
         initListView();
         initButtons();
     }
@@ -74,22 +64,22 @@ public class HistoryActivity extends AppCompatActivity {
     }
 
     private void initListView() {
-        historyListView = findViewById(R.id.historyLV);
+        listView = findViewById(R.id.historyLV);
          rolls = (ArrayList<Roll>) getIntent().getSerializableExtra("historyArrayList");
         setAdapter(rolls);
         setMsgForToasts();
     }
     private void setAdapter(ArrayList<Roll> rolls) {
-        arrayAdapter = new RollAdapter(c, rolls);
+        arrayAdapter = new RollAdapter(context, rolls);
         arrayAdapter.notifyDataSetChanged();
-        historyListView.setAdapter(arrayAdapter);
-        historyListView.setSelection(arrayAdapter.getCount() -1);
+        listView.setAdapter(arrayAdapter);
+        listView.setSelection(arrayAdapter.getCount() -1);
     }
 
 
 
     private void setMsgForToasts(){
-        historyListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Roll roll = rolls.get(position);
@@ -108,7 +98,7 @@ public class HistoryActivity extends AppCompatActivity {
         });
     }
     private void showToast(String text) {
-        Toast.makeText(c, text,
+        Toast.makeText(context, text,
                 Toast.LENGTH_SHORT).show();
     }
 }

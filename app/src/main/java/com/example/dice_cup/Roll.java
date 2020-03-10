@@ -7,9 +7,20 @@ class Roll implements Serializable {
     private int score;
     private ArrayList<Integer> dices;
 
-    Roll(int score, ArrayList<Integer> dices){
+    public String getTimestamp() {
+        return timestamp;
+    }
+
+    public void setTimestamp(String timestamp) {
+        this.timestamp = timestamp;
+    }
+
+    private String timestamp;
+
+    Roll(int score, ArrayList<Integer> dices, String timestamp){
         setScore(score);
         setDices(dices);
+        setTimestamp(timestamp);
     }
 
     private void setScore(int score) {
