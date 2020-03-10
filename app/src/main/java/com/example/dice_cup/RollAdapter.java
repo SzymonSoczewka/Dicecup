@@ -8,16 +8,10 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-
-import java.sql.Timestamp;
-import java.text.DateFormat;
 import java.text.MessageFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 public class RollAdapter extends ArrayAdapter<Roll> {
@@ -44,7 +38,7 @@ public class RollAdapter extends ArrayAdapter<Roll> {
 
         Roll roll = rolls.get(position);
         TextView txtScore = view.findViewById(R.id.textView);
-        txtScore.setText(MessageFormat.format(roll.getTimestamp(), roll.getScore()));
+        txtScore.setText(MessageFormat.format(roll.getTimestamp() + " ("+roll.getScore()+")" , roll.getScore()));
 
 
         LinearLayout dicesLayout = view.findViewById(R.id.dicesContainter);
@@ -53,11 +47,15 @@ public class RollAdapter extends ArrayAdapter<Roll> {
         for (Integer imageID : dices) {
             ImageView dice = new ImageView(getContext());
             dice.setImageResource(imageID);
-            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(80, LinearLayout.LayoutParams.MATCH_PARENT);
-            params.setMargins(5,5,5,5);
-            dice.setLayoutParams(params);
+
+            dice.setLayoutParams(setParams());
             dicesLayout.addView(dice);
         }
         return view;
+    }
+    private LinearLayout.LayoutParams setParams(){
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(80, LinearLayout.LayoutParams.MATCH_PARENT);
+        params.setMargins(5,5,5,5);
+        return params;
     }
 }
